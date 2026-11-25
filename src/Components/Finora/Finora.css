@@ -1,0 +1,1030 @@
+/* ==========================================================================
+   Finora Premium SaaS Admin Dashboard Design System
+   Strict Color Palette:
+   - Main Background: #0B0F19
+   - Cards and Panels: #161E2E
+   - Primary Blue: #3B82F6
+   - Primary Text: #F1F5F9
+   - Secondary Text: #94A3B8
+   - Borders: #1E293B
+   ========================================================================== */
+
+:root {
+  --finora-bg-main: #0B0F19;
+  --finora-bg-card: #161E2E;
+  --finora-bg-card-hover: #1A2438;
+  --finora-bg-surface: #101623;
+  --finora-primary: #3B82F6;
+  --finora-primary-hover: #2563EB;
+  --finora-primary-glow: rgba(59, 130, 246, 0.18);
+  --finora-text-primary: #F1F5F9;
+  --finora-text-secondary: #94A3B8;
+  --finora-text-muted: #64748B;
+  --finora-border: #1E293B;
+  --finora-border-light: #2D3A50;
+  
+  /* Semantic Badges */
+  --finora-success: #10B981;
+  --finora-success-bg: rgba(16, 185, 129, 0.12);
+  --finora-danger: #EF4444;
+  --finora-danger-bg: rgba(239, 68, 68, 0.12);
+  --finora-warning: #F59E0B;
+  --finora-warning-bg: rgba(245, 158, 11, 0.12);
+  --finora-info: #3B82F6;
+  --finora-info-bg: rgba(59, 130, 246, 0.12);
+
+  --finora-radius-sm: 8px;
+  --finora-radius-md: 12px;
+  --finora-radius-lg: 16px;
+  --finora-transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --finora-sidebar-width: 260px;
+  --finora-sidebar-collapsed-width: 80px;
+  --finora-header-height: 72px;
+}
+
+/* Base Wrapper */
+.finora-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--finora-bg-main);
+  color: var(--finora-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  display: flex;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.finora-wrapper * {
+  box-sizing: border-box;
+}
+
+/* Sidebar */
+.finora-sidebar {
+  width: var(--finora-sidebar-width);
+  background-color: var(--finora-bg-card);
+  border-right: 1px solid var(--finora-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  transition: width 0.28s ease, transform 0.28s ease;
+}
+
+.finora-sidebar.collapsed {
+  width: var(--finora-sidebar-collapsed-width);
+}
+
+.finora-sidebar-brand {
+  height: var(--finora-header-height);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--finora-border);
+}
+
+.finora-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.finora-logo-mark {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--finora-primary), #1D4ED8);
+  border-radius: var(--finora-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px var(--finora-primary-glow);
+  flex-shrink: 0;
+}
+
+.finora-logo-text {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--finora-text-primary);
+  white-space: nowrap;
+}
+
+.finora-logo-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--finora-primary);
+  border-radius: 4px;
+  margin-left: 6px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.finora-collapse-btn {
+  background: transparent;
+  border: 1px solid var(--finora-border);
+  color: var(--finora-text-secondary);
+  border-radius: var(--finora-radius-sm);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--finora-transition);
+}
+
+.finora-collapse-btn:hover {
+  background: var(--finora-bg-surface);
+  color: var(--finora-text-primary);
+  border-color: var(--finora-border-light);
+}
+
+.finora-nav-menu {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.finora-nav-category {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--finora-text-muted);
+  padding: 10px 12px 6px 12px;
+}
+
+.finora-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--finora-radius-sm);
+  color: var(--finora-text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--finora-transition);
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.finora-nav-item:hover {
+  color: var(--finora-text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.finora-nav-item.active {
+  color: #FFFFFF;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0.06) 100%);
+  border-color: rgba(59, 130, 246, 0.35);
+  font-weight: 600;
+}
+
+.finora-nav-item.active .finora-nav-icon {
+  color: var(--finora-primary);
+}
+
+.finora-nav-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--finora-transition);
+}
+
+.finora-sidebar-footer {
+  padding: 16px 14px;
+  border-top: 1px solid var(--finora-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.finora-sidebar-footer-card {
+  background: var(--finora-bg-surface);
+  border: 1px solid var(--finora-border);
+  border-radius: var(--finora-radius-md);
+  padding: 12px;
+  width: 100%;
+}
+
+.finora-plan-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.finora-plan-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--finora-text-primary);
+}
+
+.finora-plan-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--finora-success-bg);
+  color: var(--finora-success);
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* Main Area */
+.finora-main-container {
+  flex: 1;
+  margin-left: var(--finora-sidebar-width);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.28s ease;
+  background-color: var(--finora-bg-main);
+}
+
+.finora-main-container.sidebar-collapsed {
+  margin-left: var(--finora-sidebar-collapsed-width);
+}
+
+/* Header */
+.finora-header {
+  height: var(--finora-header-height);
+  background: var(--finora-bg-card);
+  border-bottom: 1px solid var(--finora-border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.finora-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.finora-mobile-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--finora-border);
+  color: var(--finora-text-secondary);
+  padding: 8px;
+  border-radius: var(--finora-radius-sm);
+  cursor: pointer;
+}
+
+.finora-search-bar {
+  position: relative;
+  width: 320px;
+}
+
+.finora-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--finora-text-muted);
+  pointer-events: none;
+}
+
+.finora-search-input {
+  width: 100%;
+  background: var(--finora-bg-main);
+  border: 1px solid var(--finora-border);
+  border-radius: var(--finora-radius-md);
+  padding: 8px 14px 8px 38px;
+  font-size: 13px;
+  color: var(--finora-text-primary);
+  outline: none;
+  transition: var(--finora-transition);
+}
+
+.finora-search-input:focus {
+  border-color: var(--finora-primary);
+  box-shadow: 0 0 0 3px var(--finora-primary-glow);
+}
+
+.finora-search-input::placeholder {
+  color: var(--finora-text-muted);
+}
+
+.finora-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.finora-date-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--finora-bg-main);
+  border: 1px solid var(--finora-border);
+  padding: 7px 12px;
+  border-radius: var(--finora-radius-md);
+  font-size: 13px;
+  color: var(--finora-text-secondary);
+}
+
+.finora-date-display svg {
+  color: var(--finora-primary);
+}
+
+.finora-icon-button {
+  background: var(--finora-bg-main);
+  border: 1px solid var(--finora-border);
+  color: var(--finora-text-secondary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--finora-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--finora-transition);
+}
+
+.finora-icon-button:hover {
+  color: var(--finora-text-primary);
+  border-color: var(--finora-border-light);
+  background: var(--finora-bg-surface);
+}
+
+.finora-badge-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--finora-primary);
+  border-radius: 50%;
+  border: 2px solid var(--finora-bg-card);
+}
+
+/* User Profile Trigger */
+.finora-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px 4px 4px;
+  background: var(--finora-bg-main);
+  border: 1px solid var(--finora-border);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: var(--finora-transition);
+}
+
+.finora-profile-trigger:hover {
+  border-color: var(--finora-border-light);
+}
+
+.finora-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #1E40AF);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.finora-profile-info {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.finora-profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--finora-text-primary);
+  line-height: 1.2;
+}
+
+.finora-profile-role {
+  font-size: 11px;
+  color: var(--finora-text-muted);
+}
+
+/* Dropdown Panels */
+.finora-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  background: var(--finora-bg-card);
+  border: 1px solid var(--finora-border);
+  border-radius: var(--finora-radius-md);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  overflow: hidden;
+  animation: finoraFadeIn 0.18s ease;
+}
+
+@keyframes finoraFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.finora-dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--finora-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--finora-text-primary);
+}
+
+.finora-dropdown-action {
+  font-size: 11px;
+  color: var(--finora-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.finora-dropdown-action:hover {
+  text-decoration: underline;
+}
+
+.finora-dropdown-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.finora-dropdown-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+  cursor: pointer;
+  transition: var(--finora-transition);
+}
+
+.finora-dropdown-item:hover {
+  background: var(--finora-bg-surface);
+}
+
+.finora-dropdown-item.unread {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.finora-dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--finora-text-secondary);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: var(--finora-transition);
+}
+
+.finora-dropdown-link:hover {
+  background: var(--finora-bg-surface);
+  color: var(--finora-text-primary);
+}
+
+.finora-dropdown-link.danger:hover {
+  color: var(--finora-danger);
+}
+
+/* Content Area */
+.finora-content {
+  padding: 28px;
+  flex: 1;
+}
+
+.finora-page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.finora-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--finora-text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.finora-page-subtitle {
+  font-size: 13px;
+  color: var(--finora-text-secondary);
+  margin-top: 4px;
+}
+
+.finora-action-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.finora-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--finora-radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--finora-transition);
+  border: 1px solid transparent;
+}
+
+.finora-btn-primary {
+  background: var(--finora-primary);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px var(--finora-primary-glow);
+}
+
+.finora-btn-primary:hover {
+  background: var(--finora-primary-hover);
+  transform: translateY(-1px);
+}
+
+.finora-btn-secondary {
+  background: var(--finora-bg-card);
+  border-color: var(--finora-border);
+  color: var(--finora-text-secondary);
+}
+
+.finora-btn-secondary:hover {
+  background: var(--finora-bg-card-hover);
+  color: var(--finora-text-primary);
+  border-color: var(--finora-border-light);
+}
+
+/* Section 3: Stat Cards */
+.finora-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.finora-stat-card {
+  background: var(--finora-bg-card);
+  border: 1px solid var(--finora-border);
+  border-radius: var(--finora-radius-lg);
+  padding: 22px;
+  transition: var(--finora-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.finora-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--finora-border-light);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.finora-stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.finora-stat-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--finora-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--finora-primary);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.finora-stat-card.stat-green .finora-stat-icon-wrap {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--finora-success);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.finora-stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.finora-stat-badge.positive {
+  background: var(--finora-success-bg);
+  color: var(--finora-success);
+}
+
+.finora-stat-badge.negative {
+  background: var(--finora-danger-bg);
+  color: var(--finora-danger);
+}
+
+.finora-stat-title {
+  font-size: 13px;
+  color: var(--finora-text-secondary);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.finora-stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--finora-text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.finora-stat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--finora-text-muted);
+  border-top: 1px solid rgba(30, 41, 59, 0.6);
+  padding-top: 10px;
+  margin-top: 6px;
+}
+
+/* Section 4 & 5: Charts & Monthly Stats Layout */
+.finora-analytics-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.finora-panel {
+  background: var(--finora-bg-card);
+  border: 1px solid var(--finora-border);
+  border-radius: var(--finora-radius-lg);
+  padding: 22px;
+}
+
+.finora-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.finora-panel-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--finora-text-primary);
+}
+
+.finora-panel-subtitle {
+  font-size: 12px;
+  color: var(--finora-text-secondary);
+  margin-top: 2px;
+}
+
+.finora-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--finora-bg-main);
+  padding: 3px;
+  border-radius: var(--finora-radius-sm);
+  border: 1px solid var(--finora-border);
+}
+
+.finora-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--finora-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--finora-transition);
+}
+
+.finora-tab-btn.active {
+  background: var(--finora-bg-card);
+  color: var(--finora-text-primary);
+  border: 1px solid var(--finora-border-light);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Interactive SVG Chart */
+.finora-chart-container {
+  position: relative;
+  width: 100%;
+  height: 270px;
+}
+
+.finora-chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.finora-chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: var(--finora-bg-surface);
+  border: 1px solid var(--finora-border-light);
+  border-radius: var(--finora-radius-sm);
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--finora-text-primary);
+  pointer-events: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  z-index: 20;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+/* Monthly Performance Metrics */
+.finora-monthly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.finora-monthly-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.finora-monthly-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.finora-monthly-label {
+  color: var(--finora-text-secondary);
+  font-weight: 500;
+}
+
+.finora-monthly-val {
+  color: var(--finora-text-primary);
+  font-weight: 700;
+}
+
+.finora-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--finora-bg-main);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--finora-border);
+}
+
+.finora-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--finora-primary), #60A5FA);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.finora-progress-fill.green {
+  background: linear-gradient(90deg, #059669, #10B981);
+}
+
+.finora-progress-fill.yellow {
+  background: linear-gradient(90deg, #D97706, #F59E0B);
+}
+
+.finora-monthly-sub {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--finora-text-muted);
+}
+
+/* Section 6 & 7: Recent Activities & Analytics Reports Layout */
+.finora-secondary-row {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+/* Activity Items */
+.finora-activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.finora-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px;
+  border-radius: var(--finora-radius-md);
+  border: 1px solid transparent;
+  transition: var(--finora-transition);
+}
+
+.finora-activity-item:hover {
+  background: var(--finora-bg-surface);
+  border-color: var(--finora-border);
+}
+
+.finora-activity-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--finora-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.finora-activity-content {
+  flex: 1;
+}
+
+.finora-activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.finora-activity-user {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--finora-text-primary);
+}
+
+.finora-activity-time {
+  font-size: 11px;
+  color: var(--finora-text-muted);
+}
+
+.finora-activity-text {
+  font-size: 12px;
+  color: var(--finora-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.finora-status-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.finora-status-pill.completed, .finora-status-pill.verified {
+  background: var(--finora-success-bg);
+  color: var(--finora-success);
+}
+
+.finora-status-pill.in-progress, .finora-status-pill.pending {
+  background: var(--finora-warning-bg);
+  color: var(--finora-warning);
+}
+
+/* Table Design */
+.finora-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.finora-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.finora-table th {
+  padding: 12px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--finora-text-muted);
+  border-bottom: 1px solid var(--finora-border);
+  background: var(--finora-bg-main);
+}
+
+.finora-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+  color: var(--finora-text-primary);
+}
+
+.finora-table tr:hover td {
+  background: var(--finora-bg-surface);
+}
+
+/* Modal / Drawer Overlay */
+.finora-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 15, 25, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 45;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .finora-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .finora-analytics-row {
+    grid-template-columns: 1fr;
+  }
+  .finora-secondary-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .finora-sidebar {
+    transform: translateX(-100%);
+    width: 260px !important;
+  }
+  .finora-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  .finora-main-container {
+    margin-left: 0 !important;
+  }
+  .finora-mobile-toggle {
+    display: flex;
+  }
+  .finora-search-bar {
+    width: 200px;
+  }
+  .finora-date-display {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .finora-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .finora-content {
+    padding: 16px;
+  }
+  .finora-header {
+    padding: 0 16px;
+  }
+  .finora-search-bar {
+    display: none;
+  }
+  .finora-profile-name, .finora-profile-role {
+    display: none;
+  }
+}

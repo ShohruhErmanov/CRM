@@ -90,12 +90,12 @@ export function CrmLayout({ customerCount = 0 }) {
 
         <div className={styles.sidebarFooter}>
           <div className={styles.operatorCard}>
-            <Avatar name="Shohruh Ermanov" size="sm" />
+            <Avatar name="Finora Operator" size="sm" />
             <div className={styles.operatorMeta}>
-              <p className={styles.operatorName}>Shohruh Ermanov</p>
+              <p className={styles.operatorName}>Operator</p>
               <p className={styles.operatorShift}>
                 <span className={styles.onlineDot} aria-hidden="true" />
-                Operator · Faol smena
+                Faol smena
               </p>
             </div>
           </div>

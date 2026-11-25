@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  CRM_OPERATORS,
   CUSTOMER_SEGMENTS,
   CUSTOMER_SOURCES,
   CUSTOMER_STATUSES,
@@ -26,7 +25,7 @@ const EMPTY_FORM = {
   status: 'new',
   segment: 'pro',
   source: 'telegram',
-  operator: CRM_OPERATORS[0],
+  operator: '',
   contractValue: '',
   tags: '',
   notes: '',
@@ -46,7 +45,7 @@ function mapCustomerToForm(customer) {
     status: customer.status || 'new',
     segment: customer.segment || 'pro',
     source: customer.source || 'telegram',
-    operator: customer.operator || CRM_OPERATORS[0],
+    operator: customer.operator || '',
     contractValue:
       customer.contractValue !== undefined && customer.contractValue !== null
         ? String(customer.contractValue)
@@ -219,17 +218,12 @@ function CustomerFormFields({ mode, initialCustomer, onSubmit }) {
             ))}
           </Select>
 
-          <Select
+          <Input
             label="Mas’ul operator"
+            placeholder="Masalan: Azizbek"
             value={values.operator}
             onChange={handleChange('operator')}
-          >
-            {CRM_OPERATORS.map((operator) => (
-              <option key={operator} value={operator}>
-                {operator}
-              </option>
-            ))}
-          </Select>
+          />
 
           <Input
             label="Oylik shartnoma qiymati ($)"

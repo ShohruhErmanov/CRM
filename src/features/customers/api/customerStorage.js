@@ -1,29 +1,33 @@
-import { SEED_CUSTOMERS } from '../data/seedCustomers';
+const CUSTOMERS_STORAGE_KEY = 'finora_crm_customers_v2';
+const ARCHIVED_HISTORY_STORAGE_KEY = 'finora_crm_customers_history_archive_v2';
 
-const CUSTOMERS_STORAGE_KEY = 'finora_crm_customers_v1';
-const ARCHIVED_HISTORY_STORAGE_KEY = 'finora_crm_customers_history_archive_v1';
+const LEGACY_KEYS = [
+  'finora_crm_customers_v1',
+  'finora_crm_customers_history_archive_v1',
+];
 
-function cloneSeedCustomers() {
-  return JSON.parse(JSON.stringify(SEED_CUSTOMERS));
+function clearLegacyKeys() {
+  try {
+    LEGACY_KEYS.forEach((key) => window.localStorage.removeItem(key));
+  } catch {
+    // Ignore storage access errors in restricted environments
+  }
 }
 
 /**
  * Customer repository service.
- * Currently backed by localStorage; teammates or backend engineers can swap
- * these methods to REST / GraphQL API calls without changing UI components.
+ * Starts cleanly with 0 records and persists user-created customers in localStorage.
+ * Teammates can swap these methods to REST / GraphQL endpoints without changing UI components.
  */
 export function loadCustomers() {
+  clearLegacyKeys();
   try {
     const raw = window.localStorage.getItem(CUSTOMERS_STORAGE_KEY);
-    if (!raw) {
-      const initial = cloneSeedCustomers();
-      saveCustomers(initial);
-      return initial;
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : cloneSeedCustomers();
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return cloneSeedCustomers();
+    return [];
   }
 }
 
@@ -31,7 +35,7 @@ export function saveCustomers(customers) {
   try {
     window.localStorage.setItem(CUSTOMERS_STORAGE_KEY, JSON.stringify(customers));
   } catch {
-    // Storage quota or private browsing mode fallback: keep in-memory state working
+    // Keep in-memory state working even if storage quota is exceeded
   }
 }
 
@@ -55,8 +59,8 @@ export function saveArchivedHistory(events) {
 }
 
 export function resetCustomerStorage() {
-  const fresh = cloneSeedCustomers();
-  saveCustomers(fresh);
+  clearLegacyKeys();
+  saveCustomers([]);
   saveArchivedHistory([]);
-  return fresh;
+  return [];
 }

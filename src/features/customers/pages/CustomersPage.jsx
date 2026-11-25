@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { History, Plus, RotateCcw, Users } from 'lucide-react';
+import { History, Plus, Trash2, Users } from 'lucide-react';
 import { CUSTOMER_STATUS_MAP } from '../constants/customerOptions';
 import { CustomerDetailsDrawer } from '../components/CustomerDetailsDrawer';
 import { CustomerFormDrawer } from '../components/CustomerFormDrawer';
@@ -9,7 +9,7 @@ import { CustomerTable } from '../components/CustomerTable';
 import { CustomerToolbar } from '../components/CustomerToolbar';
 import { DeleteCustomerDialog } from '../components/DeleteCustomerDialog';
 import { useCustomersContext } from '../context/useCustomersContext';
-import { Button } from '../../../shared/components/ui';
+import { Button, ConfirmDialog } from '../../../shared/components/ui';
 import { useToast } from '../../../shared/hooks/useToast';
 import { cn } from '../../../shared/utils/cn';
 import styles from './CustomersPage.module.css';
@@ -23,6 +23,7 @@ export function CustomersPage() {
   const {
     customers,
     filteredCustomers,
+    operators,
     stats,
     globalHistory,
     filters,
@@ -33,7 +34,7 @@ export function CustomersPage() {
     changeCustomerStatus,
     addCustomerActivity,
     deleteCustomer,
-    resetDemoData,
+    clearAllCustomers,
   } = useCustomersContext();
 
   const { showToast } = useToast();
@@ -42,6 +43,7 @@ export function CustomersPage() {
   const [formState, setFormState] = useState({ open: false, mode: 'create', customer: null });
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   const selectedCustomer =
     customers.find((item) => item.id === selectedCustomerId) || null;
@@ -135,15 +137,18 @@ export function CustomersPage() {
     }
   };
 
-  const handleResetDemo = () => {
-    resetDemoData();
+  const handleClearAll = () => {
+    clearAllCustomers();
     setSelectedCustomerId(null);
+    setConfirmClearOpen(false);
     showToast({
       tone: 'info',
-      title: 'Demo ma’lumotlar tiklandi',
-      description: 'Boshlang‘ich IT mijozlar bazasi qayta yuklandi.',
+      title: 'Baza tozalandi',
+      description: 'Barcha mijozlar va tarix yozuvlari 0 holatga keltirildi.',
     });
   };
+
+  const hasAnyData = customers.length > 0 || globalHistory.length > 0;
 
   return (
     <section className={styles.page}>
@@ -156,10 +161,16 @@ export function CustomersPage() {
         </div>
 
         <div className={styles.headerActions}>
-          <Button variant="ghost" size="md" onClick={handleResetDemo}>
-            <RotateCcw size={15} />
-            Namuna bazani tiklash
-          </Button>
+          {hasAnyData && (
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={() => setConfirmClearOpen(true)}
+            >
+              <Trash2 size={15} />
+              Bazani tozalash
+            </Button>
+          )}
           <Button variant="primary" size="md" onClick={handleOpenCreate}>
             <Plus size={16} />
             Mijoz qo‘shish
@@ -205,6 +216,7 @@ export function CustomersPage() {
 
           <CustomerToolbar
             filters={filters}
+            operators={operators}
             onFilterChange={updateFilter}
             onResetFilters={resetFilters}
             totalCount={customers.length}
@@ -265,6 +277,16 @@ export function CustomersPage() {
         customer={deleteTarget}
         onConfirm={handleConfirmDelete}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmClearOpen}
+        title="Barcha mijozlar va tarixni o‘chirish?"
+        description="Barcha mijozlar yozuvlari va tarix jurnali butunlay tozalanib, 0 holatga qaytariladi."
+        confirmLabel="Ha, 0 qilish"
+        cancelLabel="Bekor qilish"
+        onConfirm={handleClearAll}
+        onCancel={() => setConfirmClearOpen(false)}
       />
     </section>
   );

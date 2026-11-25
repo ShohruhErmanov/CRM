@@ -26,7 +26,7 @@ function createEvent({
   type,
   title,
   detail = '',
-  actor = 'Shohruh Ermanov',
+  actor = 'Operator',
   fromStatus,
   toStatus,
 }) {
@@ -89,7 +89,7 @@ export function useCustomers() {
       const nowIso = new Date().toISOString();
       const id = generateCustomerId(customers);
       const status = payload.status || 'new';
-      const operator = payload.operator || 'Shohruh Ermanov';
+      const operator = (payload.operator || '').trim() || 'Operator';
       const sourceLabel =
         CUSTOMER_SOURCE_MAP[payload.source]?.label || 'To‘g‘ridan-to‘g‘ri';
 
@@ -156,8 +156,9 @@ export function useCustomers() {
         const newSeg = CUSTOMER_SEGMENT_MAP[payload.segment]?.label || payload.segment;
         changes.push(`Tarif: ${oldSeg} → ${newSeg}`);
       }
-      if (payload.operator !== existing.operator) {
-        changes.push(`Operator: ${existing.operator} → ${payload.operator}`);
+      const nextOperator = (payload.operator || '').trim() || 'Operator';
+      if (nextOperator !== existing.operator) {
+        changes.push(`Operator: ${existing.operator} → ${nextOperator}`);
       }
       if (nextValue !== Number(existing.contractValue || 0)) {
         changes.push(`Shartnoma qiymati: $${existing.contractValue || 0} → $${nextValue}`);
@@ -172,7 +173,7 @@ export function useCustomers() {
             detail: 'Tahrirlash oynasi orqali status yangilandi.',
             fromStatus: existing.status,
             toStatus: payload.status,
-            actor: payload.operator || existing.operator,
+            actor: nextOperator,
           })
         );
       }
@@ -183,7 +184,7 @@ export function useCustomers() {
             type: 'updated',
             title: 'Mijoz ma’lumotlari tahrirlandi',
             detail: changes.join(' · '),
-            actor: payload.operator || existing.operator,
+            actor: nextOperator,
           })
         );
       } else if (newEvents.length === 0) {
@@ -192,7 +193,7 @@ export function useCustomers() {
             type: 'updated',
             title: 'Profil qayta saqlandi',
             detail: 'Izohlar yoki qo‘shimcha maydonlar yangilandi.',
-            actor: payload.operator || existing.operator,
+            actor: nextOperator,
           })
         );
       }
@@ -210,7 +211,7 @@ export function useCustomers() {
         status: payload.status,
         segment: payload.segment,
         source: payload.source,
-        operator: payload.operator,
+        operator: nextOperator,
         contractValue: nextValue,
         tags: nextTags,
         notes: (payload.notes || '').trim(),
@@ -239,7 +240,7 @@ export function useCustomers() {
           detail: note.trim() || 'Operator tomonidan status yangilandi.',
           fromStatus: customer.status,
           toStatus: nextStatus,
-          actor: 'Shohruh Ermanov',
+          actor: customer.operator || 'Operator',
         });
 
         return {
@@ -263,7 +264,7 @@ export function useCustomers() {
           type,
           title: title.trim(),
           detail: detail.trim(),
-          actor: 'Shohruh Ermanov',
+          actor: customer.operator || 'Operator',
         });
 
         return {
@@ -288,7 +289,7 @@ export function useCustomers() {
           type: 'deleted',
           title: 'Mijoz bazadan o‘chirildi',
           detail: `${target.fullName} (${target.company}) yozuvi o‘chirildi.`,
-          actor: 'Shohruh Ermanov',
+          actor: target.operator || 'Operator',
         }),
         customerId: target.id,
         customerName: target.fullName,
@@ -302,7 +303,7 @@ export function useCustomers() {
     [customers]
   );
 
-  const resetDemoData = useCallback(() => {
+  const clearAllCustomers = useCallback(() => {
     const fresh = resetCustomerStorage();
     setCustomers(fresh);
     setArchivedHistory([]);
@@ -338,6 +339,7 @@ export function useCustomers() {
         customer.email,
         customer.telegram,
         customer.operator,
+        customer.notes,
         ...(customer.tags || []),
       ]
         .join(' ')
@@ -405,9 +407,18 @@ export function useCustomers() {
     );
   }, [customers, archivedHistory]);
 
+  const operators = useMemo(
+    () =>
+      Array.from(
+        new Set(customers.map((item) => item.operator).filter(Boolean))
+      ).sort((a, b) => a.localeCompare(b, 'uz')),
+    [customers]
+  );
+
   return {
     customers,
     filteredCustomers,
+    operators,
     stats,
     globalHistory,
     filters,
@@ -418,6 +429,6 @@ export function useCustomers() {
     changeCustomerStatus,
     addCustomerActivity,
     deleteCustomer,
-    resetDemoData,
+    clearAllCustomers,
   };
 }

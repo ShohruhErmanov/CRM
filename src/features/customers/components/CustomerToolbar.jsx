@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { RotateCcw, Search, X } from 'lucide-react';
 import {
-  CRM_OPERATORS,
   CUSTOMER_SEGMENTS,
   CUSTOMER_SORT_OPTIONS,
   CUSTOMER_SOURCES,
@@ -14,6 +13,7 @@ import styles from './CustomerToolbar.module.css';
  */
 export function CustomerToolbar({
   filters,
+  operators = [],
   onFilterChange,
   onResetFilters,
   totalCount,
@@ -95,7 +95,7 @@ export function CustomerToolbar({
           className={styles.select}
         >
           <option value="all">Barcha operatorlar</option>
-          {CRM_OPERATORS.map((operator) => (
+          {operators.map((operator) => (
             <option key={operator} value={operator}>
               {operator}
             </option>

@@ -58,14 +58,6 @@ export const CUSTOMER_SOURCE_MAP = Object.fromEntries(
   CUSTOMER_SOURCES.map((source) => [source.value, source])
 );
 
-export const CRM_OPERATORS = [
-  'Shohruh Ermanov',
-  'Aziza Karimova',
-  'Jasur Toshmatov',
-  'Madina Rustamova',
-  'Bekzod Alimov',
-];
-
 export const HISTORY_EVENT_TYPES = {
   created: { value: 'created', label: 'Bazaga qo‘shildi', tone: 'info' },
   status_change: { value: 'status_change', label: 'Status o‘zgardi', tone: 'warning' },

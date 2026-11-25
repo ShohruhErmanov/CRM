@@ -84,7 +84,13 @@ export function CustomerHistoryTimeline({
         ))}
       </div>
 
-      {filteredEvents.length === 0 ? (
+      {events.length === 0 ? (
+        <EmptyState
+          icon={<History size={22} />}
+          title="Hozircha mijozlar tarixi bo‘sh"
+          description="Mijoz qo‘shilganida, status o‘zgarganda yoki qo‘ng‘iroq/izoh kiritilganda barcha harakatlar shu yerda saqlanadi."
+        />
+      ) : filteredEvents.length === 0 ? (
         <EmptyState
           icon={<History size={22} />}
           title="Bu turdagi tarix yozuvlari topilmadi"

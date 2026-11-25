@@ -25,7 +25,6 @@ src/
 │       ├── components/         # Jadval, filtrlar, status select, form/details drawer, tarix
 │       ├── constants/          # Statuslar, tariflar, manbalar, event turlari
 │       ├── context/            # Modullararo ulashiladigan mijozlar holati
-│       ├── data/               # Boshlang'ich demo mijozlar bazasi
 │       ├── hooks/              # Qidiruv, filtrlash, CRUD, status va tarix logikasi
 │       ├── pages/              # CustomersPage (/customers) va CustomerDetailPage (/customers/:id)
 │       └── index.js            # Modulning tashqi eksport nuqtasi (barrel export)

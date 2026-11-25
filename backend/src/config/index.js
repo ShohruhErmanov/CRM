@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 const backendDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const rootDir = path.resolve(backendDir, '..')
 
-dotenv.config({ path: path.join(backendDir, '.env') })
+dotenv.config({ path: path.join(backendDir, '.env'), quiet: true })
 
 function resolveProjectPath(value, fallback) {
   const target = value || fallback

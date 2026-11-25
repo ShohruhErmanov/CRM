@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Avatar from '../../components/common/Avatar.jsx'
 import ConfirmDialog from '../../components/common/ConfirmDialog.jsx'
-import EmptyState from '../../components/common/EmptyState.jsx'
+import { EmptyState } from '../../components/common/StateViews.jsx'
 import EmployeeForm from '../../components/forms/EmployeeForm.jsx'
 import Icon from '../../components/common/Icon.jsx'
 import Modal from '../../components/common/Modal.jsx'
@@ -9,7 +9,7 @@ import Pagination from '../../components/common/Pagination.jsx'
 import StatusBadge from '../../components/common/StatusBadge.jsx'
 import EmployeesTable from '../../components/tables/EmployeesTable.jsx'
 import { ErrorState, LoadingState } from '../../components/common/StateViews.jsx'
-import { useToast } from '../../contexts/ToastContext.jsx'
+import { useToast } from '../../hooks/useToast.js'
 import { useDebounce } from '../../hooks/useDebounce.js'
 import { api } from '../../services/api.js'
 import { formatDate, formatMoney } from '../../utils/format.js'
@@ -59,7 +59,7 @@ export default function Employees() {
   )
 
   const load = useCallback(() => {
-    const controller = new AbortController()
+    void refreshKey
     setLoading(true)
     setError('')
     api.employees.list({
@@ -70,11 +70,8 @@ export default function Employees() {
       limit,
     })
       .then((result) => setData(result))
-      .catch((requestError) => {
-        if (requestError.name !== 'AbortError') setError(requestError.message)
-      })
+      .catch((requestError) => setError(requestError.message))
       .finally(() => setLoading(false))
-    return () => controller.abort()
   }, [filters, sortBy, sortOrder, page, limit, refreshKey])
 
   useEffect(() => { load() }, [load])
@@ -207,14 +204,16 @@ export default function Employees() {
         )}
       </section>
 
-      <EmployeeForm
-        open={formOpen}
-        employee={editing}
-        departments={departments}
-        positions={positions}
-        onClose={() => setFormOpen(false)}
-        onSaved={afterMutation}
-      />
+      {formOpen && (
+        <EmployeeForm
+          open
+          employee={editing}
+          departments={departments}
+          positions={positions}
+          onClose={() => setFormOpen(false)}
+          onSaved={afterMutation}
+        />
+      )}
 
       <Modal
         open={Boolean(viewing)}

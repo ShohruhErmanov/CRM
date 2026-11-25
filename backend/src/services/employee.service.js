@@ -83,9 +83,11 @@ export function createEmployee(payload, file) {
   ensureUnique(data)
 
   const photoPath = savePhoto(file)
+  const employeeData = { ...data }
+  delete employeeData.removePhoto
   try {
     return transaction(getDb(), () => {
-      const employee = createEmployeeRow({ ...data, photoPath })
+      const employee = createEmployeeRow({ ...employeeData, photoPath })
       logActivity(
         getDb(), 'employee', employee.id, 'create',
         `${employee.firstName} ${employee.lastName} ismli xodim qo‘shildi.`,
@@ -107,19 +109,20 @@ export function updateEmployee(id, payload, file) {
   ensureRelations(data)
   ensureUnique(data, employeeId)
 
+  const { removePhoto, ...employeeData } = data
   let photoPath = existing.photoPath
   let photoToDelete = null
   if (file) {
     photoPath = savePhoto(file)
     photoToDelete = existing.photoPath
-  } else if (data.removePhoto) {
+  } else if (removePhoto) {
     photoPath = null
     photoToDelete = existing.photoPath
   }
 
   try {
     const employee = transaction(getDb(), () => {
-      const updated = updateEmployeeRow(employeeId, { ...data, photoPath })
+      const updated = updateEmployeeRow(employeeId, { ...employeeData, photoPath })
       logActivity(
         getDb(), 'employee', employeeId, 'update',
         `${updated.firstName} ${updated.lastName} maʼlumotlari yangilandi.`,

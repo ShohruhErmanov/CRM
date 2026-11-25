@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useToast } from '../../contexts/ToastContext.jsx'
+import { useToast } from '../../hooks/useToast.js'
 import { api } from '../../services/api.js'
 import { validateDepartment } from '../../utils/validators.js'
 import Icon from '../common/Icon.jsx'

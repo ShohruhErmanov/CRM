@@ -52,7 +52,7 @@ export default function Dashboard() {
           </header>
           <BarChart
             data={stats.byDepartment.map((item) => ({ label: item.name, value: item.total }))}
-            emptyText="Bo‘limlar hali qo‘shilmagan."
+            emptyText="Hozircha bo‘limlarda xodim yo‘q."
           />
         </article>
         <article className="card">

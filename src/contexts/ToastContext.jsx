@@ -1,7 +1,6 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import Icon from '../components/common/Icon.jsx'
-
-const ToastContext = createContext(null)
+import { ToastContext } from './toast-context.js'
 
 const iconByType = {
   success: 'check',
@@ -9,10 +8,9 @@ const iconByType = {
   info: 'info',
 }
 
-export function ToastProvider({ children }) {
+export default function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([])
   const counter = useRef(0)
-  const timers = useRef([])
 
   const remove = useCallback((id) => {
     setToasts((current) => current.filter((toast) => toast.id !== id))
@@ -22,15 +20,14 @@ export function ToastProvider({ children }) {
     counter.current += 1
     const id = counter.current
     setToasts((current) => [...current, { id, type, message }])
-    const timer = setTimeout(() => remove(id), 4500)
-    timers.current.push(timer)
+    setTimeout(() => remove(id), 4500)
   }, [remove])
 
-  const api = {
+  const api = useMemo(() => ({
     success: (message) => notify('success', message),
     error: (message) => notify('error', message),
     info: (message) => notify('info', message),
-  }
+  }), [notify])
 
   return (
     <ToastContext.Provider value={api}>
@@ -48,10 +45,4 @@ export function ToastProvider({ children }) {
       </div>
     </ToastContext.Provider>
   )
-}
-
-export function useToast() {
-  const context = useContext(ToastContext)
-  if (!context) throw new Error('useToast faqat ToastProvider ichida ishlatilishi mumkin.')
-  return context
 }

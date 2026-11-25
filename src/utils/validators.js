@@ -1,4 +1,4 @@
-const namePattern = /^[\p{L}][\p{L}\s‘’'\-]*$/u
+const namePattern = /^[\p{L}][\p{L}\s‘’'-]*$/u
 const emailPattern = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
 
 export function validateEmployee(values, positions = []) {
@@ -12,7 +12,7 @@ export function validateEmployee(values, positions = []) {
   else if (!namePattern.test(values.lastName.trim())) errors.lastName = 'Faqat harflardan foydalaning.'
   else if (values.lastName.trim().length < 2) errors.lastName = 'Kamida 2 belgi kiriting.'
 
-  const phone = String(values.phone || '').replace(/[\s()\-]/g, '')
+  const phone = String(values.phone || '').replace(/[\s()-]/g, '')
   if (!phone) errors.phone = 'Telefon raqami kiritilishi shart.'
   else if (!/^(?:\+998|998|0)[1-9]\d{8}$/.test(phone)) errors.phone = 'Misol: +998901234567.'
 

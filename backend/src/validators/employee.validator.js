@@ -7,7 +7,7 @@ const allowedFields = [
 ]
 
 export function normalizePhone(value) {
-  const digits = String(value ?? '').replace(/[\s()\-]/g, '')
+  const digits = String(value ?? '').replace(/[\s()-]/g, '')
   const match = /^(?:\+998|998|0)([1-9]\d{8})$/.exec(digits)
   if (!match) {
     throw badRequest('Telefon raqami noto‘g‘ri formatda.', [

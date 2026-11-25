@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { api } from '../../services/api.js'
 import { serverErrorsToFields, validateEmployee } from '../../utils/validators.js'
-import { useToast } from '../../contexts/ToastContext.jsx'
+import { useToast } from '../../hooks/useToast.js'
 import Icon from '../common/Icon.jsx'
 import Modal from '../common/Modal.jsx'
 

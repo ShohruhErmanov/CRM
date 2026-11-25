@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import ConfirmDialog from '../../components/common/ConfirmDialog.jsx'
 import DepartmentForm from '../../components/forms/DepartmentForm.jsx'
-import EmptyState from '../../components/common/EmptyState.jsx'
+import { EmptyState } from '../../components/common/StateViews.jsx'
 import Icon from '../../components/common/Icon.jsx'
 import Modal from '../../components/common/Modal.jsx'
 import Pagination from '../../components/common/Pagination.jsx'
 import { ErrorState, LoadingState } from '../../components/common/StateViews.jsx'
-import { useToast } from '../../contexts/ToastContext.jsx'
+import { useToast } from '../../hooks/useToast.js'
 import { api } from '../../services/api.js'
 import { formatDate, formatNumber } from '../../utils/format.js'
 
@@ -29,6 +29,7 @@ export default function Departments() {
   const [actionError, setActionError] = useState('')
 
   const load = useCallback(() => {
+    void refreshKey
     setLoading(true)
     setError('')
     api.departments.list({ q: search, page, limit })
@@ -55,7 +56,7 @@ export default function Departments() {
     setActionError('')
     try {
       await api.departments.remove(deleteTarget.id)
-      toast.success(`${deleteTarget.name} bo‘limi o‘chirildi.`)
+      toast.success(`${deleteTarget.name} o‘chirildi.`)
       setDeleteTarget(null)
       setRefreshKey((key) => key + 1)
     } catch (requestError) {
@@ -127,12 +128,14 @@ export default function Departments() {
         )}
       </section>
 
-      <DepartmentForm
-        open={formOpen}
-        department={editing}
-        onClose={() => setFormOpen(false)}
-        onSaved={() => setRefreshKey((key) => key + 1)}
-      />
+      {formOpen && (
+        <DepartmentForm
+          open
+          department={editing}
+          onClose={() => setFormOpen(false)}
+          onSaved={() => setRefreshKey((key) => key + 1)}
+        />
+      )}
 
       <Modal
         open={Boolean(viewing)}

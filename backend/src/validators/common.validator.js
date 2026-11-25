@@ -27,7 +27,7 @@ export function textField(value, label, options = {}) {
 
 export function personName(value, label) {
   const name = textField(value, label, { min: 2, max: 60 })
-  const letters = name.replace(/[\s‘’'\-]/gu, '')
+  const letters = name.replace(/[\s‘’'-]/gu, '')
   if (!/^\p{L}+$/u.test(letters) || letters.length < 2) {
     throw badRequest(`${label} faqat harflardan iborat bo‘lishi kerak.`, [
       { field: label, message: 'Faqat harflar, bo‘shliq, tire va apostrofdan foydalaning.' },

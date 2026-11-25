@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "start": "node backend/server.js",
     "test": "node --test backend/tests/*.test.js",
+    "seed:demo": "node backend/scripts/seed-demo-employees.js",
     "lint": "eslint ."
   },
   "dependencies": {

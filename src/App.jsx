@@ -1,5 +1,12 @@
 import { useMemo, useState } from 'react'
 import './App.css'
+import Sidebar from './components/layout/Sidebar'
+import Topbar from './components/layout/Topbar'
+import KanbanBoard from './components/tasks/KanbanBoard'
+import TaskModal from './components/tasks/TaskModal'
+import TaskComments from './components/tasks/TaskComments'
+import EmployeesPage from './components/employees/EmployeesPage'
+import { employees, initialTasks, taskColumns } from './data/tasks'
 
 const Icon = ({ name, size = 20 }) => {
   const paths = {
@@ -28,108 +35,81 @@ const initialLeads = [
 const statusClass = { Yangi: 'new', 'Bogʻlangan': 'contacted', Qiziqdi: 'interested', Aylantirildi: 'converted', Yoʻqotildi: 'lost' }
 
 function App() {
-  const [active, setActive] = useState('Bosh sahifa')
-  const [leads, setLeads] = useState(initialLeads)
-  const [filter, setFilter] = useState('Barchasi')
-  const [search, setSearch] = useState('')
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedLead, setSelectedLead] = useState(null)
+  const [tasks, setTasks] = useState(initialTasks)
+  const [query, setQuery] = useState('')
+  const [activeNav, setActiveNav] = useState('Vazifalar')
+  const [showModal, setShowModal] = useState(false)
+  const [selectedTaskId, setSelectedTaskId] = useState(null)
 
-  const filteredLeads = useMemo(() => leads.filter((lead) => {
-    const matchesFilter = filter === 'Barchasi' || lead.status === filter
-    const text = `${lead.name} ${lead.company} ${lead.phone}`.toLowerCase()
-    return matchesFilter && text.includes(search.toLowerCase())
-  }), [leads, filter, search])
+  const filteredTasks = useMemo(() => {
+    const normalized = query.trim().toLowerCase()
+    if (!normalized) return tasks
+    return tasks.filter((task) => `${task.title} ${task.project}`.toLowerCase().includes(normalized))
+  }, [tasks, query])
 
-  const nav = [
-    ['Bosh sahifa', 'grid'], ['Leadlar', 'users'], ['Sales Pipeline', 'target'],
-    ['Mijozlar', 'chart'], ['Sales History', 'history'], ['Sozlamalar', 'settings'],
-  ]
+  const selectedTask = tasks.find((task) => task.id === selectedTaskId)
 
-  function addLead(event) {
+  function addTask(event) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    setLeads((current) => [{
-      id: Date.now(), name: data.get('name'), company: data.get('company'),
-      phone: data.get('phone'), status: data.get('status'), value: Number(data.get('value')),
-      date: 'Hozir',
-    }, ...current])
-    setModalOpen(false)
+
+    setTasks((current) => [...current, {
+      id: Date.now(),
+      title: data.get('title'),
+      project: data.get('project') || 'Finora',
+      status: data.get('status'),
+      priority: data.get('priority'),
+      due: data.get('due') || '30 Nov',
+      assigneeId: data.get('assigneeId'),
+      comments: [],
+    }])
+
+    event.currentTarget.reset()
+    setShowModal(false)
   }
 
-  function updateLeadStatus(id, status) {
-    setLeads((current) => current.map((lead) => lead.id === id ? { ...lead, status } : lead))
+  function updateTask(taskId, changes) {
+    setTasks((current) => current.map((task) => task.id === taskId ? { ...task, ...changes } : task))
   }
 
-  const leadTable = (compact = false) => (
-    <div className="table-wrap"><table><thead><tr><th>Mijoz</th><th>Telefon</th><th>Status</th><th>Summa</th><th></th></tr></thead><tbody>
-      {filteredLeads.map((lead) => <tr key={lead.id}>
-        <td><button className="customer customer-button" onClick={() => setSelectedLead(lead)}><div className="customer-avatar">{lead.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div><div><strong>{lead.name}</strong><small>{lead.company}</small></div></button></td>
-        <td>{lead.phone}</td>
-        <td><span className={`status ${statusClass[lead.status]}`}><i />{lead.status}</span></td>
-        <td><strong>${lead.value.toLocaleString()}</strong></td>
-        <td><select className="row-status" aria-label="Lead statusini o'zgartirish" value={lead.status} onChange={(e) => updateLeadStatus(lead.id, e.target.value)}><option>Yangi</option><option>Bogʻlangan</option><option>Qiziqdi</option><option>Aylantirildi</option><option>Yoʻqotildi</option></select></td>
-      </tr>)}
-    </tbody></table>{compact && filteredLeads.length === 0 && <div className="empty-state">Lead topilmadi</div>}</div>
-  )
-
-  const pipelineStatuses = ['Yangi', 'Bogʻlangan', 'Qiziqdi', 'Aylantirildi', 'Yoʻqotildi']
+  function addComment(taskId, text) {
+    setTasks((current) => current.map((task) => task.id === taskId ? {
+      ...task,
+      comments: [...(task.comments || []), {
+        id: Date.now(),
+        author: 'Shohruh Ermanov',
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }],
+    } : task))
+  }
 
   return (
     <div className="app-shell">
-      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <div className="brand"><div className="brand-mark"><span></span><span></span><span></span></div><strong>CRM<span>Pro</span></strong></div>
-        <nav>{nav.map(([label, icon]) => (
-          <button key={label} className={active === label ? 'nav-item active' : 'nav-item'} onClick={() => { setActive(label); setSidebarOpen(false) }}><Icon name={icon} /><span>{label}</span></button>
-        ))}</nav>
-        <div className="sidebar-footer"><div className="mini-avatar">SA</div><div><strong>Sardor Aliyev</strong><small>Administrator</small></div></div>
-      </aside>
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
 
-      <main className="main">
-        <header className="topbar">
-          <button className="icon-button menu-button" onClick={() => setSidebarOpen(!sidebarOpen)}><Icon name="menu" /></button>
-          <div className="search-box"><Icon name="search" /><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Ism, kompaniya yoki telefon bo‘yicha qidirish..." /></div>
-          <button className="icon-button notification"><Icon name="bell" /><i /></button>
-          <div className="profile"><div className="avatar">SA</div><div className="profile-text"><strong>Sardor Aliyev</strong><small>Administrator</small></div></div>
-        </header>
+      <main className="main-content">
+        <Topbar query={query} onQueryChange={setQuery} onOpenModal={() => setShowModal(true)} />
 
-        <section className="content">
-          <div className="page-heading"><div><p className="eyebrow">CRM DASHBOARD</p><h1>{active}</h1></div><button className="primary-button" onClick={() => setModalOpen(true)}><Icon name="plus" />Yangi Lead</button></div>
-
-          {active === 'Bosh sahifa' && <>
-            <div className="stats-grid">
-              <article className="stat-card"><div className="stat-icon blue"><Icon name="users" /></div><div><p>Jami leadlar</p><h2>{leads.length + 124}</h2><span className="positive">↗ 12.5%</span></div></article>
-              <article className="stat-card"><div className="stat-icon purple"><Icon name="target" /></div><div><p>Konversiya</p><h2>28.4%</h2><span className="positive">↗ 4.2%</span></div></article>
-              <article className="stat-card"><div className="stat-icon green"><Icon name="chart" /></div><div><p>Oylik savdo</p><h2>$48,250</h2><span className="positive">↗ 8.1%</span></div></article>
-              <article className="stat-card"><div className="stat-icon orange"><Icon name="history" /></div><div><p>Oʻrtacha chek</p><h2>$6,820</h2><span className="positive">↗ 2.7%</span></div></article>
+        {activeNav === 'Xodimlar' ? (
+          <section className="content"><EmployeesPage employees={employees} tasks={tasks} onUpdateTask={updateTask} /></section>
+        ) : (
+          <section className="content">
+            <div className="page-heading">
+              <div><p className="eyebrow">LOYIHALAR / FINORA</p><h1>Vazifalar</h1></div>
+              <div className="heading-meta">
+                <span>{tasks.length} vazifa</span>
+                <div className="member-stack"><b>SE</b><b>AK</b><b>+3</b></div>
+              </div>
             </div>
-            <div className="dashboard-grid">
-              <section className="panel leads-panel"><div className="panel-header"><div><h3>Oxirgi Leadlar</h3><p>Soʻnggi qoʻshilgan mijozlar</p></div><button className="text-button" onClick={() => setActive('Leadlar')}>Barchasini ko‘rish <Icon name="arrow" size={16} /></button></div>
-                <div className="filters">{['Barchasi', 'Yangi', 'Bogʻlangan', 'Qiziqdi', 'Aylantirildi'].map((item) => <button key={item} onClick={() => setFilter(item)} className={filter === item ? 'selected' : ''}>{item}</button>)}</div>
-                {leadTable(true)}
-              </section>
-              <section className="panel pipeline-panel"><div className="panel-header"><div><h3>Sales Pipeline</h3><p>Leadlar holati</p></div><button className="dots">•••</button></div><div className="pipeline">
-                {[["Yangi", 34, '#3B82F6'], ['Bogʻlangan', 28, '#8B5CF6'], ['Qiziqdi', 21, '#F59E0B'], ['Aylantirildi', 17, '#10B981']].map(([label, value, color]) => <div className="pipeline-row" key={label}><div className="pipeline-label"><span>{label}</span><strong>{value}%</strong></div><div className="bar"><i style={{ width: `${value * 2.2}%`, background: color }} /></div></div>)}
-              </div><div className="pipeline-total"><span>Jami pipeline qiymati</span><strong>$124,500</strong></div></section>
-            </div>
-          </>}
 
-          {active === 'Leadlar' && <section className="panel page-panel"><div className="panel-header"><div><h3>Barcha Leadlar</h3><p>{filteredLeads.length} ta natija</p></div></div><div className="filters">{['Barchasi', 'Yangi', 'Bogʻlangan', 'Qiziqdi', 'Aylantirildi', 'Yoʻqotildi'].map((item) => <button key={item} onClick={() => setFilter(item)} className={filter === item ? 'selected' : ''}>{item}</button>)}</div>{leadTable(false)}</section>}
-
-          {active === 'Sales Pipeline' && <div className="kanban">{pipelineStatuses.map((status) => <section className="kanban-column" key={status}><div className="kanban-header"><span className={`status-dot ${statusClass[status]}`}></span><strong>{status}</strong><b>{leads.filter((l) => l.status === status).length}</b></div>{leads.filter((l) => l.status === status).map((lead) => <button className="lead-card" key={lead.id} onClick={() => setSelectedLead(lead)}><strong>{lead.name}</strong><small>{lead.company}</small><div><span>{lead.phone}</span><b>${lead.value.toLocaleString()}</b></div></button>)}</section>)}</div>}
-
-          {active === 'Mijozlar' && <section className="panel page-panel"><div className="panel-header"><div><h3>Mijozlar</h3><p>Aylantirilgan va faol mijozlar</p></div></div>{leadTable(false)}</section>}
-
-          {active === 'Sales History' && <section className="panel page-panel"><div className="panel-header"><div><h3>Sotuvlar tarixi</h3><p>Oxirgi operatsiyalar</p></div></div><div className="table-wrap"><table><thead><tr><th>Mijoz</th><th>Kampaniya</th><th>Vaqt</th><th>Summa</th><th>Holat</th></tr></thead><tbody>{leads.map((lead) => <tr key={lead.id}><td><strong>{lead.name}</strong></td><td>{lead.company}</td><td>{lead.date}</td><td><strong>${lead.value.toLocaleString()}</strong></td><td><span className={`status ${statusClass[lead.status]}`}><i />{lead.status}</span></td></tr>)}</tbody></table></div></section>}
-
-          {active === 'Sozlamalar' && <section className="panel settings-panel"><div className="panel-header"><div><h3>Hisob sozlamalari</h3><p>Shaxsiy maʼlumotlar va xabarnomalar</p></div></div><div className="settings-content"><label>Toʻliq ism<input defaultValue="Sardor Aliyev" /></label><label>Email<input defaultValue="sardor@crmpro.uz" /></label><label>Til<select defaultValue="Oʻzbekcha"><option>Oʻzbekcha</option><option>Русский</option><option>English</option></select></label><button className="primary-button">Oʻzgarishni saqlash</button></div></section>}
-        </section>
+            <KanbanBoard tasks={filteredTasks} columns={taskColumns} employees={employees} onOpenModal={() => setShowModal(true)} onOpenComments={(task) => setSelectedTaskId(task.id)} />
+          </section>
+        )}
       </main>
 
-      {modalOpen && <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && setModalOpen(false)}><form className="modal" onSubmit={addLead}><div className="modal-header"><div><p className="eyebrow">Yangi mijoz</p><h3>Lead qoʻshish</h3></div><button type="button" onClick={() => setModalOpen(false)}>×</button></div><div className="form-grid"><label>Ism familiya<input name="name" required placeholder="Masalan: Ali Valiyev" /></label><label>Kompaniya<input name="company" required placeholder="Masalan: Tech Solutions" /></label><label>Telefon<input name="phone" required placeholder="+998 90 000 00 00" /></label><label>Summa<input name="value" type="number" required placeholder="5000" /></label><label className="full">Status<select name="status"><option>Yangi</option><option>Bogʻlangan</option><option>Qiziqdi</option><option>Aylantirildi</option></select></label></div><button className="primary-button submit" type="submit"><Icon name="plus" />Lead qoʻshish</button></form></div>}
-
-      {selectedLead && <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && setSelectedLead(null)}><div className="modal lead-detail"><div className="modal-header"><div><p className="eyebrow">Lead maʼlumotlari</p><h3>{selectedLead.name}</h3></div><button type="button" onClick={() => setSelectedLead(null)}>×</button></div><div className="detail-grid"><div><small>Kompaniya</small><strong>{selectedLead.company}</strong></div><div><small>Telefon</small><strong>{selectedLead.phone}</strong></div><div><small>Summa</small><strong>${selectedLead.value.toLocaleString()}</strong></div><div><small>Yaratilgan</small><strong>{selectedLead.date}</strong></div></div><label className="detail-status">Status<select value={selectedLead.status} onChange={(e) => { updateLeadStatus(selectedLead.id, e.target.value); setSelectedLead({ ...selectedLead, status: e.target.value }) }}><option>Yangi</option><option>Bogʻlangan</option><option>Qiziqdi</option><option>Aylantirildi</option><option>Yoʻqotildi</option></select></label></div></div>}
+      {showModal && <TaskModal onClose={() => setShowModal(false)} onSubmit={addTask} employees={employees} />}
+      {selectedTask && <TaskComments task={selectedTask} employees={employees} onClose={() => setSelectedTaskId(null)} onAddComment={addComment} />}
     </div>
   )
 }
